@@ -17,7 +17,7 @@ with DAG(
         , sqlite_conn_id='db_sqlite_test_airflow'
         , sql='''
             CREATE TABLE users (
-                email TEXT PRIMARY KEY AUTOINCREMENT
+                email TEXT PRIMARY KEY NOT NULL
                 , firstname TEXT NOT NULL
                 , lastname TEXT NOT NULL
                 , country TEXT NOT NULL
