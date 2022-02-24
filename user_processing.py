@@ -76,7 +76,6 @@ with DAG(
         task_id='processing_users'
         , python_callable=_processing_user
     )
-    git add *; git commit -m 'Add user_processing'; git push origin master
 
     storing_user = BashOperator(
         task_id='storing_user'
