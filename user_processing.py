@@ -76,10 +76,11 @@ with DAG(
         task_id='processing_users'
         , python_callable=_processing_user
     )
+    git add *; git commit -m 'Add user_processing'; git push origin master
 
     storing_user = BashOperator(
         task_id='storing_user'
-        , bash_command='echo -e ".separator ","\n.import /tmp/processed_user.csv users" | sqlite3  /home/airfdb_sqlite_test_airflow.db '
+        , bash_command='echo -e ".separator ","\n.import /tmp/processed_user.csv users" | sqlite3  /home/airflow/airflow/db_sqlite_test_airflow.db'
 
     )
 
