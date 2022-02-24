@@ -43,7 +43,7 @@ with DAG(
         , http_conn_id='user_api_test_airflow'
         , endpoint='api/'
         , method='GET'
-        , response_filter=lambda response: json.loads(respose.text)
+        , response_filter=lambda response: json.loads(response.text)
         , log_response=True
 
     )
