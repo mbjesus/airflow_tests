@@ -13,7 +13,7 @@ default_args = {
 }
 
 
-def processing_users(ti):
+def _processing_user(ti):
     users = ti.xcom_pull(task_id=['extracting_user'])
 
     if not len(users) or 'results' not in users[0]:
