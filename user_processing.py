@@ -1,5 +1,6 @@
 from airflow.models import DAG
 from airflow.providers.sqlite.operators.sqlite import SqliteOperator
+from airflow.providers.http.sensors.http import HttpSensor
 from datetime import datetime
 
 default_args = {
@@ -25,4 +26,11 @@ with DAG(
                 , password TEXT NOT NULL
             );
         '''
+    )
+
+    is_api_available = HttpSensor(
+        task_id='is_api_available'
+        , http_conn_id='user_api_test_airflow'
+        , endpoint='api/'
+
     )
