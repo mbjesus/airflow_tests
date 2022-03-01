@@ -42,9 +42,10 @@ with DAG(
     # Define tasks/operators
     creating_table = SqliteOperator(
         task_id='creating_table'
+        #You should create a SQL3 connection in Airflow to database file db_sqlite_test_airflow with sqlite_conn_id='db_sqlite_test_airflow'.
         , sqlite_conn_id='db_sqlite_test_airflow'
         , sql='''
-            CREATE TABLE users (
+            CREATE TABLE IF NOT EXISTS use  rs (
                 email TEXT PRIMARY KEY NOT NULL
                 , firstname TEXT NOT NULL
                 , lastname TEXT NOT NULL
@@ -56,6 +57,7 @@ with DAG(
     )
 
     is_api_available = HttpSensor(
+        ## You should create a HTTP connection with URL https://randomuser.me/ and http_conn_id='user_api_test_airflow'
         task_id='is_api_available'
         , http_conn_id='user_api_test_airflow'
         , endpoint='api/'
@@ -79,7 +81,8 @@ with DAG(
 
     storing_user = BashOperator(
         task_id='storing_user'
-        , bash_command='echo -e ".separator ," "\n.import /tmp/processed_user.csv users" | sqlite3  /home/airflow/airflow/db_sqlite_test_airflow.db'
+        , bash_command='echo -e ".separator ," "\n.import /tmp/processed_user.csv users" | sqlite3  /home/mbjesus/airflow/dags/airflow_tests/db_sqlite_test_airflow.db'
     )
 
+    ## Setting the preference order to the Operators (tasks).
     creating_table >> is_api_available >> extracting_user >> processing_users >> storing_user
