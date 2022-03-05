@@ -38,14 +38,15 @@ with DAG(
         'user_processing'
         , schedule_interval='@daily'
         , default_args=default_args
-        , catchup=False) as dag:
+        , catchup=False
+        , max_active_runs=1) as dag:
     # Define tasks/operators
     creating_table = SqliteOperator(
         task_id='creating_table'
         #You should create a SQL3 connection in Airflow to database file db_sqlite_test_airflow with sqlite_conn_id='db_sqlite_test_airflow'.
         , sqlite_conn_id='db_sqlite_test_airflow'
         , sql='''
-            CREATE TABLE IF NOT EXISTS use  rs (
+            CREATE TABLE IF NOT EXISTS user (
                 email TEXT PRIMARY KEY NOT NULL
                 , firstname TEXT NOT NULL
                 , lastname TEXT NOT NULL
