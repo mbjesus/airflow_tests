@@ -1,8 +1,6 @@
 from airflow import DAG
 from airflow.operators.bash import BashOperator
-from airflow.operators.subdag import SubDagOperator
-
-from subdags.subdag_parallel_dag import subdag_parallel_dag
+from airflow.utils.task_group import TaskGroup
 
 from datetime import datetime
 
@@ -16,11 +14,28 @@ with DAG(dag_id='parallel_dag', schedule_interval='@daily', default_args=default
         , bash_command='sleep 3'
     )
 
-    processing = SubDagOperator(
-        task_id='processing_tasks'
-        , subdag=subdag_parallel_dag('parallel_dag', 'processing_tasks', default_args)
+    with TaskGroup('processing_group_tasks') as processing_group_tasks:
+        task_2 = BashOperator(
+            task_id='task_2'
+            , bash_command='sleep 3'
+        )
 
-    )
+        with TaskGroup('spark_tasks') as spark_taks:
+            task_3 = BashOperator(
+                task_id='task_3'
+                , bash_command='sleep 3'
+            )
+
+            task_5 = BashOperator(
+                task_id='task_5'
+                , bash_command='sleep 3'
+            )
+
+        with TaskGroup('flink_tasks') as flink_tasks:
+            task_3 = BashOperator(
+                task_id='task_3'
+                , bash_command='sleep 3'
+            )
 
 
     task_4 = BashOperator(
@@ -28,5 +43,5 @@ with DAG(dag_id='parallel_dag', schedule_interval='@daily', default_args=default
         , bash_command='sleep 3'
     )
 
-    task_1 >> processing >> task_4
+    task_1 >> processing_group_tasks >> task_4
 
